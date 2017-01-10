@@ -1,0 +1,7 @@
+[package]
+name = "jcdrs"
+version = "0.0.0"
+authors = ["SiIky <siiky@users.noreply.github.com>"]
+
+[dependencies]
+clap = "2.19.3"
