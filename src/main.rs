@@ -8,7 +8,7 @@ mod io;
 mod r2k;
 
 fn main() {
-    let cmds: App<'static, 'static> = usage();
+    let cmds = clap();
     let map = r2k::get_dict();
     let file = io::get_file();
 
@@ -16,15 +16,18 @@ fn main() {
         return;
     }
 
-    println!();
-    let args: env::Args = env::args();
+    let mut args: env::Args = env::args();
+    args.next();
+    let args = args;
+
+    // args.fuse().map(|arg| print!("{}", r2k::do_work(&map, &arg)));
     for arg in args {
         print!("{}", r2k::do_work(&map, &arg));
     }
     println!();
 }
 
-fn usage() -> App<'static, 'static> {
+fn clap() -> App<'static, 'static> {
     App::new("Japanese Command-line Dictionary")
         .version("0.0.1")
         .author("https://github.com/siiky")
@@ -36,6 +39,9 @@ fn usage() -> App<'static, 'static> {
                 .takes_value(true))
             .arg(Arg::with_name("kanji")
                 .short("K")
+                .takes_value(true))
+            .arg(Arg::with_name("meaning")
+                .short("m")
                 .takes_value(true)))
         .subcommand(SubCommand::with_name("search"))
         .subcommand(SubCommand::with_name("convert"))

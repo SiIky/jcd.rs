@@ -17,8 +17,8 @@ pub fn get_file() -> Option<File> {
     let base = base;
 
     let ret = match File::open(&base) {
-        Ok(f) => Ok(f),
         Err(_) => File::create(&base), // If the dict.txt file doesn't exist, try to create it
+        f => f,
     };
 
     match ret {

@@ -1,230 +1,254 @@
 use std::collections::HashMap;
 
-pub type Dict = HashMap<String, String>;
+const DEFAULT_CAPACITY: usize = 213;
 
-pub fn init(d: &mut Dict) {
-    if !d.is_empty() {
-        return;
-    }
-    // Hiragana
-    d.insert("a".to_string(), "\u{3042}".to_string()); // あ
-    d.insert("i".to_string(), "\u{3044}".to_string()); // い
-    d.insert("u".to_string(), "\u{3046}".to_string()); // う
-    d.insert("e".to_string(), "\u{3048}".to_string()); // え
-    d.insert("o".to_string(), "\u{304a}".to_string()); // お
-    d.insert("ka".to_string(), "\u{304b}".to_string()); // か
-    d.insert("ga".to_string(), "\u{304c}".to_string()); // が
-    d.insert("ki".to_string(), "\u{304d}".to_string()); // き
-    d.insert("gi".to_string(), "\u{304e}".to_string()); // ぎ
-    d.insert("ku".to_string(), "\u{304f}".to_string()); // く
-    d.insert("gu".to_string(), "\u{3050}".to_string()); // ぐ
-    d.insert("ke".to_string(), "\u{3051}".to_string()); // け
-    d.insert("ge".to_string(), "\u{3052}".to_string()); // げ
-    d.insert("ko".to_string(), "\u{3053}".to_string()); // こ
-    d.insert("go".to_string(), "\u{3054}".to_string()); // ご
-    d.insert("sa".to_string(), "\u{3055}".to_string()); // さ
-    d.insert("za".to_string(), "\u{3056}".to_string()); // ざ
-    d.insert("shi".to_string(), "\u{3057}".to_string()); // し
-    d.insert("ji".to_string(), "\u{3058}".to_string()); // じ
-    d.insert("su".to_string(), "\u{3059}".to_string()); // す
-    d.insert("zu".to_string(), "\u{305a}".to_string()); // ず
-    d.insert("se".to_string(), "\u{305b}".to_string()); // せ
-    d.insert("ze".to_string(), "\u{305c}".to_string()); // ぜ
-    d.insert("so".to_string(), "\u{305d}".to_string()); // そ
-    d.insert("zo".to_string(), "\u{305e}".to_string()); // ぞ
-    d.insert("ta".to_string(), "\u{305f}".to_string()); // た
-    d.insert("da".to_string(), "\u{3060}".to_string()); // だ
-    d.insert("chi".to_string(), "\u{3061}".to_string()); // ち
-    d.insert("dji".to_string(), "\u{3062}".to_string()); // ぢ
-    d.insert("tsu".to_string(), "\u{3064}".to_string()); // つ
-    d.insert("dzu".to_string(), "\u{3065}".to_string()); // づ
-    d.insert("te".to_string(), "\u{3066}".to_string()); // て
-    d.insert("de".to_string(), "\u{3067}".to_string()); // で
-    d.insert("to".to_string(), "\u{3068}".to_string()); // と
-    d.insert("do".to_string(), "\u{3069}".to_string()); // ど
-    d.insert("na".to_string(), "\u{306a}".to_string()); // な
-    d.insert("ni".to_string(), "\u{306b}".to_string()); // に
-    d.insert("nu".to_string(), "\u{306c}".to_string()); // ぬ
-    d.insert("ne".to_string(), "\u{306d}".to_string()); // ね
-    d.insert("no".to_string(), "\u{306d}".to_string()); // の
-    d.insert("ha".to_string(), "\u{306f}".to_string()); // は
-    d.insert("ba".to_string(), "\u{3070}".to_string()); // ば
-    d.insert("pa".to_string(), "\u{3071}".to_string()); // ぱ
-    d.insert("hi".to_string(), "\u{3072}".to_string()); // ひ
-    d.insert("bi".to_string(), "\u{3073}".to_string()); // び
-    d.insert("pi".to_string(), "\u{3074}".to_string()); // ぴ
-    d.insert("fu".to_string(), "\u{3075}".to_string()); // ふ
-    d.insert("bu".to_string(), "\u{3076}".to_string()); // ぶ
-    d.insert("pu".to_string(), "\u{3077}".to_string()); // ぷ
-    d.insert("he".to_string(), "\u{3078}".to_string()); // へ
-    d.insert("be".to_string(), "\u{3079}".to_string()); // べ
-    d.insert("pe".to_string(), "\u{307a}".to_string()); // ぺ
-    d.insert("ho".to_string(), "\u{307b}".to_string()); // ほ
-    d.insert("bo".to_string(), "\u{307c}".to_string()); // ぼ
-    d.insert("po".to_string(), "\u{307d}".to_string()); // ぽ
-    d.insert("ma".to_string(), "\u{307e}".to_string()); // ま
-    d.insert("mi".to_string(), "\u{307f}".to_string()); // み
-    d.insert("mu".to_string(), "\u{3080}".to_string()); // む
-    d.insert("me".to_string(), "\u{3081}".to_string()); // め
-    d.insert("mo".to_string(), "\u{3082}".to_string()); // も
-    d.insert("ya".to_string(), "\u{3084}".to_string()); // や
-    d.insert("yu".to_string(), "\u{3086}".to_string()); // ゆ
-    d.insert("yo".to_string(), "\u{3088}".to_string()); // よ
-    d.insert("ra".to_string(), "\u{3089}".to_string()); // ら
-    d.insert("ri".to_string(), "\u{308a}".to_string()); // り
-    d.insert("ru".to_string(), "\u{308b}".to_string()); // る
-    d.insert("re".to_string(), "\u{308c}".to_string()); // れ
-    d.insert("ro".to_string(), "\u{308d}".to_string()); // ろ
-    d.insert("wa".to_string(), "\u{308f}".to_string()); // わ
-    d.insert("kya".to_string(), "\u{304d}\u{3083}".to_string()); // き
-    d.insert("kyu".to_string(), "\u{304d}\u{3085}".to_string()); // き
-    d.insert("kyo".to_string(), "\u{304d}\u{3087}".to_string()); // き
-    d.insert("gya".to_string(), "\u{304e}\u{3083}".to_string()); //
-    d.insert("gyu".to_string(), "\u{304e}\u{3085}".to_string()); //
-    d.insert("gyo".to_string(), "\u{304e}\u{3087}".to_string()); //
-    d.insert("sha".to_string(), "\u{3057}\u{3083}".to_string()); //
-    d.insert("shu".to_string(), "\u{3057}\u{3085}".to_string()); //
-    d.insert("sho".to_string(), "\u{3057}\u{3087}".to_string()); //
-    d.insert("ja".to_string(), "\u{3058}\u{3083}".to_string()); //
-    d.insert("ju".to_string(), "\u{3058}\u{3085}".to_string()); //
-    d.insert("jo".to_string(), "\u{3058}\u{3087}".to_string()); //
-    d.insert("cha".to_string(), "\u{3061}\u{3083}".to_string()); //
-    d.insert("chu".to_string(), "\u{3061}\u{3085}".to_string()); //
-    d.insert("cho".to_string(), "\u{3061}\u{3087}".to_string()); //
-    d.insert("dja".to_string(), "\u{3062}\u{3083}".to_string()); //
-    d.insert("dju".to_string(), "\u{3062}\u{3085}".to_string()); //
-    d.insert("djo".to_string(), "\u{3062}\u{3087}".to_string()); //
-    d.insert("hya".to_string(), "\u{3072}\u{3083}".to_string()); //
-    d.insert("hyu".to_string(), "\u{3072}\u{3085}".to_string()); //
-    d.insert("hyo".to_string(), "\u{3072}\u{3087}".to_string()); //
-    d.insert("bya".to_string(), "\u{3073}\u{3083}".to_string()); //
-    d.insert("byu".to_string(), "\u{3073}\u{3085}".to_string()); //
-    d.insert("byo".to_string(), "\u{3073}\u{3087}".to_string()); //
-    d.insert("pya".to_string(), "\u{3074}\u{3083}".to_string()); //
-    d.insert("pyu".to_string(), "\u{3074}\u{3085}".to_string()); //
-    d.insert("pyo".to_string(), "\u{3074}\u{3087}".to_string()); //
-    d.insert("nya".to_string(), "\u{306b}\u{3083}".to_string()); //
-    d.insert("nyu".to_string(), "\u{306b}\u{3085}".to_string()); //
-    d.insert("nyo".to_string(), "\u{306b}\u{3087}".to_string()); //
-    d.insert("wi".to_string(), "\u{3090}".to_string()); // ゐ
-    d.insert("we".to_string(), "\u{3091}".to_string()); // ゑ
-    d.insert("wo".to_string(), "\u{3092}".to_string()); // を
-    d.insert("n".to_string(), "\u{3093}".to_string()); // ん
-    d.insert("vu".to_string(), "\u{3094}".to_string()); // ゔ
-
-    // Katakana
-    d.insert("A".to_string(), "\u{30a2}".to_string()); // ア
-    d.insert("I".to_string(), "\u{30a4}".to_string()); // イ
-    d.insert("U".to_string(), "\u{30a6}".to_string()); // ウ
-    d.insert("E".to_string(), "\u{30a8}".to_string()); // エ
-    d.insert("O".to_string(), "\u{30aa}".to_string()); // オ
-    d.insert("KA".to_string(), "\u{30ab}".to_string()); // カ
-    d.insert("GA".to_string(), "\u{30ac}".to_string()); // ガ
-    d.insert("KI".to_string(), "\u{30ad}".to_string()); // キ
-    d.insert("GI".to_string(), "\u{30ae}".to_string()); // ギ
-    d.insert("KU".to_string(), "\u{30af}".to_string()); // ク
-    d.insert("GU".to_string(), "\u{30b0}".to_string()); // グ
-    d.insert("KE".to_string(), "\u{30b1}".to_string()); // ケ
-    d.insert("GE".to_string(), "\u{30b2}".to_string()); // ゲ
-    d.insert("KO".to_string(), "\u{30b3}".to_string()); // コ
-    d.insert("GO".to_string(), "\u{30b4}".to_string()); // ゴ
-    d.insert("SA".to_string(), "\u{30b5}".to_string()); // サ
-    d.insert("ZA".to_string(), "\u{30b6}".to_string()); // ザ
-    d.insert("SHI".to_string(), "\u{30b7}".to_string()); // シ
-    d.insert("JI".to_string(), "\u{30b8}".to_string()); // ジ
-    d.insert("SU".to_string(), "\u{30b9}".to_string()); // ス
-    d.insert("ZU".to_string(), "\u{30ba}".to_string()); // ズ
-    d.insert("SE".to_string(), "\u{30bb}".to_string()); // セ
-    d.insert("ZE".to_string(), "\u{30bc}".to_string()); // ゼ
-    d.insert("SO".to_string(), "\u{30bd}".to_string()); // ソ
-    d.insert("ZO".to_string(), "\u{30be}".to_string()); // ゾ
-    d.insert("TA".to_string(), "\u{30bf}".to_string()); // タ
-    d.insert("DA".to_string(), "\u{30c0}".to_string()); // ダ
-    d.insert("CHI".to_string(), "\u{30c1}".to_string()); // チ
-    d.insert("DJI".to_string(), "\u{30c2}".to_string()); // ヂ
-    d.insert("TSU".to_string(), "\u{30c4}".to_string()); // ツ
-    d.insert("DZU".to_string(), "\u{30c5}".to_string()); // ヅ
-    d.insert("TE".to_string(), "\u{30c6}".to_string()); // テ
-    d.insert("DE".to_string(), "\u{30c7}".to_string()); // デ
-    d.insert("TO".to_string(), "\u{30c8}".to_string()); // ト
-    d.insert("DO".to_string(), "\u{30c9}".to_string()); // ド
-    d.insert("NA".to_string(), "\u{30ca}".to_string()); // ナ
-    d.insert("NI".to_string(), "\u{30cb}".to_string()); // ニ
-    d.insert("NU".to_string(), "\u{30cc}".to_string()); // ヌ
-    d.insert("NE".to_string(), "\u{30cd}".to_string()); // ネ
-    d.insert("NO".to_string(), "\u{30ce}".to_string()); // ノ
-    d.insert("HA".to_string(), "\u{30cf}".to_string()); // ハ
-    d.insert("BA".to_string(), "\u{30d0}".to_string()); // バ
-    d.insert("PA".to_string(), "\u{30d1}".to_string()); // パ
-    d.insert("HI".to_string(), "\u{30d2}".to_string()); // ヒ
-    d.insert("BI".to_string(), "\u{30d3}".to_string()); // ビ
-    d.insert("PI".to_string(), "\u{30d4}".to_string()); // ピ
-    d.insert("FU".to_string(), "\u{30d5}".to_string()); // フ
-    d.insert("BU".to_string(), "\u{30d6}".to_string()); // ブ
-    d.insert("PU".to_string(), "\u{30d7}".to_string()); // プ
-    d.insert("HE".to_string(), "\u{30d8}".to_string()); // ヘ
-    d.insert("BE".to_string(), "\u{30d9}".to_string()); // ベ
-    d.insert("PE".to_string(), "\u{30da}".to_string()); // ペ
-    d.insert("HO".to_string(), "\u{30db}".to_string()); // ホ
-    d.insert("BO".to_string(), "\u{30dc}".to_string()); // ボ
-    d.insert("PO".to_string(), "\u{30dd}".to_string()); // ポ
-    d.insert("MA".to_string(), "\u{30de}".to_string()); // マ
-    d.insert("MI".to_string(), "\u{30df}".to_string()); // ミ
-    d.insert("MU".to_string(), "\u{30e0}".to_string()); // ム
-    d.insert("ME".to_string(), "\u{30e1}".to_string()); // メ
-    d.insert("MO".to_string(), "\u{30e2}".to_string()); // モ
-    d.insert("YA".to_string(), "\u{30e4}".to_string()); // ヤ
-    d.insert("YU".to_string(), "\u{30e6}".to_string()); // ユ
-    d.insert("YO".to_string(), "\u{30e8}".to_string()); // ヨ
-    d.insert("RA".to_string(), "\u{30e9}".to_string()); // ラ
-    d.insert("RI".to_string(), "\u{30ea}".to_string()); // リ
-    d.insert("RU".to_string(), "\u{30eb}".to_string()); // ル
-    d.insert("RE".to_string(), "\u{30ec}".to_string()); // レ
-    d.insert("RO".to_string(), "\u{30ed}".to_string()); // ロ
-    d.insert("WA".to_string(), "\u{30ef}".to_string()); // ワ
-    d.insert("KYA".to_string(), "\u{30ad}\u{30e3}".to_string()); //
-    d.insert("KYU".to_string(), "\u{30ad}\u{30e5}".to_string()); //
-    d.insert("KYO".to_string(), "\u{30ad}\u{30e7}".to_string()); //
-    d.insert("GYA".to_string(), "\u{30ae}\u{30e3}".to_string()); //
-    d.insert("GYU".to_string(), "\u{30ae}\u{30e5}".to_string()); //
-    d.insert("GYO".to_string(), "\u{30ae}\u{30e7}".to_string()); //
-    d.insert("SHA".to_string(), "\u{30b7}\u{30e3}".to_string()); //
-    d.insert("SHU".to_string(), "\u{30b7}\u{30e5}".to_string()); //
-    d.insert("SHO".to_string(), "\u{30b7}\u{30e7}".to_string()); //
-    d.insert("JA".to_string(), "\u{30b8}\u{30e3}".to_string()); //
-    d.insert("JU".to_string(), "\u{30b8}\u{30e5}".to_string()); //
-    d.insert("JO".to_string(), "\u{30b8}\u{30e7}".to_string()); //
-    d.insert("CHA".to_string(), "\u{30c1}\u{30e3}".to_string()); //
-    d.insert("CHU".to_string(), "\u{30c1}\u{30e5}".to_string()); //
-    d.insert("CHO".to_string(), "\u{30c1}\u{30e7}".to_string()); //
-    d.insert("DJA".to_string(), "\u{30c2}\u{30e3}".to_string()); //
-    d.insert("DJU".to_string(), "\u{30c2}\u{30e5}".to_string()); //
-    d.insert("DJO".to_string(), "\u{30c2}\u{30e7}".to_string()); //
-    d.insert("HYA".to_string(), "\u{30d2}\u{30e3}".to_string()); //
-    d.insert("HYU".to_string(), "\u{30d2}\u{30e5}".to_string()); //
-    d.insert("HYO".to_string(), "\u{30d2}\u{30e7}".to_string()); //
-    d.insert("BYA".to_string(), "\u{30d3}\u{30e3}".to_string()); //
-    d.insert("BYU".to_string(), "\u{30d3}\u{30e5}".to_string()); //
-    d.insert("BYO".to_string(), "\u{30d3}\u{30e7}".to_string()); //
-    d.insert("PYA".to_string(), "\u{30d4}\u{30e3}".to_string()); //
-    d.insert("PYU".to_string(), "\u{30d4}\u{30e5}".to_string()); //
-    d.insert("PYO".to_string(), "\u{30d4}\u{30e7}".to_string()); //
-    d.insert("NYA".to_string(), "\u{30cb}\u{30e3}".to_string()); //
-    d.insert("NYU".to_string(), "\u{30cb}\u{30e5}".to_string()); //
-    d.insert("NYO".to_string(), "\u{30cb}\u{30e7}".to_string()); //
-    d.insert("WI".to_string(), "\u{30f0}".to_string()); // ヰ
-    d.insert("WE".to_string(), "\u{30f1}".to_string()); // ヱ
-    d.insert("WO".to_string(), "\u{30f2}".to_string()); // ヲ
-    d.insert("N".to_string(), "\u{30f3}".to_string()); // ン
-    d.insert("VU".to_string(), "\u{30f4}".to_string()); // ヴ
-
-    // Punctuation
-    d.insert(".".to_string(), "\u{3002}".to_string()); // 。
-    d.insert(",".to_string(), "\u{3001}".to_string()); // 、
-    d.insert("!".to_string(), "\u{ff01}".to_string()); // ！
-    d.insert("?".to_string(), "\u{ff1f}".to_string()); // ？
+pub struct Dict {
+    map: HashMap<String, String>,
 }
 
-pub fn new() -> Dict {
-    Dict::with_capacity(212)
+impl Dict {
+    fn is_empty(&self) -> bool {
+        self.map.is_empty()
+    }
+
+    pub fn insert(&mut self, k: &str, v: &str) {
+        self.map.insert(k.to_string(), v.to_string());
+    }
+
+    pub fn get(&self, k: &String) -> Option<&String> {
+        self.map.get(k)
+    }
+
+    pub fn contains_key(&self, k: &String) -> bool {
+        self.map.contains_key(k)
+    }
+
+    pub fn init(&mut self) {
+        if !self.is_empty() {
+            return;
+        }
+
+        // Hiragana
+        self.insert("a", "\u{3042}"); // あ
+        self.insert("i", "\u{3044}"); // い
+        self.insert("u", "\u{3046}"); // う
+        self.insert("e", "\u{3048}"); // え
+        self.insert("o", "\u{304a}"); // お
+        self.insert("ka", "\u{304b}"); // か
+        self.insert("ga", "\u{304c}"); // が
+        self.insert("ki", "\u{304d}"); // き
+        self.insert("gi", "\u{304e}"); // ぎ
+        self.insert("ku", "\u{304f}"); // く
+        self.insert("gu", "\u{3050}"); // ぐ
+        self.insert("ke", "\u{3051}"); // け
+        self.insert("ge", "\u{3052}"); // げ
+        self.insert("ko", "\u{3053}"); // こ
+        self.insert("go", "\u{3054}"); // ご
+        self.insert("sa", "\u{3055}"); // さ
+        self.insert("za", "\u{3056}"); // ざ
+        self.insert("shi", "\u{3057}"); // し
+        self.insert("ji", "\u{3058}"); // じ
+        self.insert("su", "\u{3059}"); // す
+        self.insert("zu", "\u{305a}"); // ず
+        self.insert("se", "\u{305b}"); // せ
+        self.insert("ze", "\u{305c}"); // ぜ
+        self.insert("so", "\u{305d}"); // そ
+        self.insert("zo", "\u{305e}"); // ぞ
+        self.insert("ta", "\u{305f}"); // た
+        self.insert("da", "\u{3060}"); // だ
+        self.insert("chi", "\u{3061}"); // ち
+        self.insert("dji", "\u{3062}"); // ぢ
+        self.insert("tsu", "\u{3064}"); // つ
+        self.insert("dzu", "\u{3065}"); // づ
+        self.insert("te", "\u{3066}"); // て
+        self.insert("de", "\u{3067}"); // で
+        self.insert("to", "\u{3068}"); // と
+        self.insert("do", "\u{3069}"); // ど
+        self.insert("na", "\u{306a}"); // な
+        self.insert("ni", "\u{306b}"); // に
+        self.insert("nu", "\u{306c}"); // ぬ
+        self.insert("ne", "\u{306d}"); // ね
+        self.insert("no", "\u{306d}"); // の
+        self.insert("ha", "\u{306f}"); // は
+        self.insert("ba", "\u{3070}"); // ば
+        self.insert("pa", "\u{3071}"); // ぱ
+        self.insert("hi", "\u{3072}"); // ひ
+        self.insert("bi", "\u{3073}"); // び
+        self.insert("pi", "\u{3074}"); // ぴ
+        self.insert("fu", "\u{3075}"); // ふ
+        self.insert("bu", "\u{3076}"); // ぶ
+        self.insert("pu", "\u{3077}"); // ぷ
+        self.insert("he", "\u{3078}"); // へ
+        self.insert("be", "\u{3079}"); // べ
+        self.insert("pe", "\u{307a}"); // ぺ
+        self.insert("ho", "\u{307b}"); // ほ
+        self.insert("bo", "\u{307c}"); // ぼ
+        self.insert("po", "\u{307d}"); // ぽ
+        self.insert("ma", "\u{307e}"); // ま
+        self.insert("mi", "\u{307f}"); // み
+        self.insert("mu", "\u{3080}"); // む
+        self.insert("me", "\u{3081}"); // め
+        self.insert("mo", "\u{3082}"); // も
+        self.insert("ya", "\u{3084}"); // や
+        self.insert("yu", "\u{3086}"); // ゆ
+        self.insert("yo", "\u{3088}"); // よ
+        self.insert("ra", "\u{3089}"); // ら
+        self.insert("ri", "\u{308a}"); // り
+        self.insert("ru", "\u{308b}"); // る
+        self.insert("re", "\u{308c}"); // れ
+        self.insert("ro", "\u{308d}"); // ろ
+        self.insert("wa", "\u{308f}"); // わ
+        self.insert("kya", "\u{304d}\u{3083}"); // き
+        self.insert("kyu", "\u{304d}\u{3085}"); // き
+        self.insert("kyo", "\u{304d}\u{3087}"); // き
+        self.insert("gya", "\u{304e}\u{3083}"); //
+        self.insert("gyu", "\u{304e}\u{3085}"); //
+        self.insert("gyo", "\u{304e}\u{3087}"); //
+        self.insert("sha", "\u{3057}\u{3083}"); //
+        self.insert("shu", "\u{3057}\u{3085}"); //
+        self.insert("sho", "\u{3057}\u{3087}"); //
+        self.insert("ja", "\u{3058}\u{3083}"); //
+        self.insert("ju", "\u{3058}\u{3085}"); //
+        self.insert("jo", "\u{3058}\u{3087}"); //
+        self.insert("cha", "\u{3061}\u{3083}"); //
+        self.insert("chu", "\u{3061}\u{3085}"); //
+        self.insert("cho", "\u{3061}\u{3087}"); //
+        self.insert("dja", "\u{3062}\u{3083}"); //
+        self.insert("dju", "\u{3062}\u{3085}"); //
+        self.insert("djo", "\u{3062}\u{3087}"); //
+        self.insert("hya", "\u{3072}\u{3083}"); //
+        self.insert("hyu", "\u{3072}\u{3085}"); //
+        self.insert("hyo", "\u{3072}\u{3087}"); //
+        self.insert("bya", "\u{3073}\u{3083}"); //
+        self.insert("byu", "\u{3073}\u{3085}"); //
+        self.insert("byo", "\u{3073}\u{3087}"); //
+        self.insert("pya", "\u{3074}\u{3083}"); //
+        self.insert("pyu", "\u{3074}\u{3085}"); //
+        self.insert("pyo", "\u{3074}\u{3087}"); //
+        self.insert("nya", "\u{306b}\u{3083}"); //
+        self.insert("nyu", "\u{306b}\u{3085}"); //
+        self.insert("nyo", "\u{306b}\u{3087}"); //
+        self.insert("wi", "\u{3090}"); // ゐ
+        self.insert("we", "\u{3091}"); // ゑ
+        self.insert("wo", "\u{3092}"); // を
+        self.insert("n", "\u{3093}"); // ん
+        self.insert("vu", "\u{3094}"); // ゔ
+
+        // Katakana
+        self.insert("A", "\u{30a2}"); // ア
+        self.insert("I", "\u{30a4}"); // イ
+        self.insert("U", "\u{30a6}"); // ウ
+        self.insert("E", "\u{30a8}"); // エ
+        self.insert("O", "\u{30aa}"); // オ
+        self.insert("KA", "\u{30ab}"); // カ
+        self.insert("GA", "\u{30ac}"); // ガ
+        self.insert("KI", "\u{30ad}"); // キ
+        self.insert("GI", "\u{30ae}"); // ギ
+        self.insert("KU", "\u{30af}"); // ク
+        self.insert("GU", "\u{30b0}"); // グ
+        self.insert("KE", "\u{30b1}"); // ケ
+        self.insert("GE", "\u{30b2}"); // ゲ
+        self.insert("KO", "\u{30b3}"); // コ
+        self.insert("GO", "\u{30b4}"); // ゴ
+        self.insert("SA", "\u{30b5}"); // サ
+        self.insert("ZA", "\u{30b6}"); // ザ
+        self.insert("SHI", "\u{30b7}"); // シ
+        self.insert("JI", "\u{30b8}"); // ジ
+        self.insert("SU", "\u{30b9}"); // ス
+        self.insert("ZU", "\u{30ba}"); // ズ
+        self.insert("SE", "\u{30bb}"); // セ
+        self.insert("ZE", "\u{30bc}"); // ゼ
+        self.insert("SO", "\u{30bd}"); // ソ
+        self.insert("ZO", "\u{30be}"); // ゾ
+        self.insert("TA", "\u{30bf}"); // タ
+        self.insert("DA", "\u{30c0}"); // ダ
+        self.insert("CHI", "\u{30c1}"); // チ
+        self.insert("DJI", "\u{30c2}"); // ヂ
+        self.insert("TSU", "\u{30c4}"); // ツ
+        self.insert("DZU", "\u{30c5}"); // ヅ
+        self.insert("TE", "\u{30c6}"); // テ
+        self.insert("DE", "\u{30c7}"); // デ
+        self.insert("TO", "\u{30c8}"); // ト
+        self.insert("DO", "\u{30c9}"); // ド
+        self.insert("NA", "\u{30ca}"); // ナ
+        self.insert("NI", "\u{30cb}"); // ニ
+        self.insert("NU", "\u{30cc}"); // ヌ
+        self.insert("NE", "\u{30cd}"); // ネ
+        self.insert("NO", "\u{30ce}"); // ノ
+        self.insert("HA", "\u{30cf}"); // ハ
+        self.insert("BA", "\u{30d0}"); // バ
+        self.insert("PA", "\u{30d1}"); // パ
+        self.insert("HI", "\u{30d2}"); // ヒ
+        self.insert("BI", "\u{30d3}"); // ビ
+        self.insert("PI", "\u{30d4}"); // ピ
+        self.insert("FU", "\u{30d5}"); // フ
+        self.insert("BU", "\u{30d6}"); // ブ
+        self.insert("PU", "\u{30d7}"); // プ
+        self.insert("HE", "\u{30d8}"); // ヘ
+        self.insert("BE", "\u{30d9}"); // ベ
+        self.insert("PE", "\u{30da}"); // ペ
+        self.insert("HO", "\u{30db}"); // ホ
+        self.insert("BO", "\u{30dc}"); // ボ
+        self.insert("PO", "\u{30dd}"); // ポ
+        self.insert("MA", "\u{30de}"); // マ
+        self.insert("MI", "\u{30df}"); // ミ
+        self.insert("MU", "\u{30e0}"); // ム
+        self.insert("ME", "\u{30e1}"); // メ
+        self.insert("MO", "\u{30e2}"); // モ
+        self.insert("YA", "\u{30e4}"); // ヤ
+        self.insert("YU", "\u{30e6}"); // ユ
+        self.insert("YO", "\u{30e8}"); // ヨ
+        self.insert("RA", "\u{30e9}"); // ラ
+        self.insert("RI", "\u{30ea}"); // リ
+        self.insert("RU", "\u{30eb}"); // ル
+        self.insert("RE", "\u{30ec}"); // レ
+        self.insert("RO", "\u{30ed}"); // ロ
+        self.insert("WA", "\u{30ef}"); // ワ
+        self.insert("KYA", "\u{30ad}\u{30e3}"); //
+        self.insert("KYU", "\u{30ad}\u{30e5}"); //
+        self.insert("KYO", "\u{30ad}\u{30e7}"); //
+        self.insert("GYA", "\u{30ae}\u{30e3}"); //
+        self.insert("GYU", "\u{30ae}\u{30e5}"); //
+        self.insert("GYO", "\u{30ae}\u{30e7}"); //
+        self.insert("SHA", "\u{30b7}\u{30e3}"); //
+        self.insert("SHU", "\u{30b7}\u{30e5}"); //
+        self.insert("SHO", "\u{30b7}\u{30e7}"); //
+        self.insert("JA", "\u{30b8}\u{30e3}"); //
+        self.insert("JU", "\u{30b8}\u{30e5}"); //
+        self.insert("JO", "\u{30b8}\u{30e7}"); //
+        self.insert("CHA", "\u{30c1}\u{30e3}"); //
+        self.insert("CHU", "\u{30c1}\u{30e5}"); //
+        self.insert("CHO", "\u{30c1}\u{30e7}"); //
+        self.insert("DJA", "\u{30c2}\u{30e3}"); //
+        self.insert("DJU", "\u{30c2}\u{30e5}"); //
+        self.insert("DJO", "\u{30c2}\u{30e7}"); //
+        self.insert("HYA", "\u{30d2}\u{30e3}"); //
+        self.insert("HYU", "\u{30d2}\u{30e5}"); //
+        self.insert("HYO", "\u{30d2}\u{30e7}"); //
+        self.insert("BYA", "\u{30d3}\u{30e3}"); //
+        self.insert("BYU", "\u{30d3}\u{30e5}"); //
+        self.insert("BYO", "\u{30d3}\u{30e7}"); //
+        self.insert("PYA", "\u{30d4}\u{30e3}"); //
+        self.insert("PYU", "\u{30d4}\u{30e5}"); //
+        self.insert("PYO", "\u{30d4}\u{30e7}"); //
+        self.insert("NYA", "\u{30cb}\u{30e3}"); //
+        self.insert("NYU", "\u{30cb}\u{30e5}"); //
+        self.insert("NYO", "\u{30cb}\u{30e7}"); //
+        self.insert("WI", "\u{30f0}"); // ヰ
+        self.insert("WE", "\u{30f1}"); // ヱ
+        self.insert("WO", "\u{30f2}"); // ヲ
+        self.insert("N", "\u{30f3}"); // ン
+        self.insert("VU", "\u{30f4}"); // ヴ
+
+        // Punctuation
+        self.insert(".", "\u{3002}"); // 。
+        self.insert(",", "\u{3001}"); // 、
+        self.insert("!", "\u{ff01}"); // ！
+        self.insert("?", "\u{ff1f}"); // ？
+        self.insert("-", "\u{30fc}"); // ー
+    }
+
+    pub fn new() -> Dict {
+        Dict { map: HashMap::with_capacity(DEFAULT_CAPACITY) }
+    }
 }

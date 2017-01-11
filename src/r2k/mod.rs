@@ -1,35 +1,55 @@
+use std::cmp;
+
 mod dict;
 
-fn get_word(d: &dict::Dict, o: &String) -> Option<String> {
-    for l in (1..4).rev() {
-        let ret = &o[0..l];
-        if let Some(_) = d.get(&ret.to_string()) {
-            return Some(ret.to_string());
+fn syllable(d: &dict::Dict, original: &String) -> Vec<String> {
+    let mut ret: Vec<String> = vec![];
+    let maxlen = cmp::min(original.chars().count() + 1, 4);
+
+    for l in (1..maxlen).rev() {
+        let tmp = original.chars().take(l).collect();
+
+        if d.contains_key(&(normalize(&tmp))) {
+            let skipped = original.chars().skip(l).collect();
+            let mut rest = syllable(d, &skipped);
+
+            ret.append(&mut rest);
+            break;
         }
     }
 
-    None
+    ret
 }
 
-fn convert_word(d: &dict::Dict, ow: &String) -> String {
-    let mut nw = ow.clone();
-
-    if nw.chars().fold(false, |acc, c| acc || c.is_uppercase()) {
-        nw = nw.to_uppercase();
+fn normalize(s: &String) -> String {
+    match s.chars().fold(false, |acc, c| acc || c.is_uppercase()) {
+        true => s.to_uppercase(),
+        false => s.clone(),
     }
+}
 
-    match (*d).get(&nw) {
+fn convert_syllable(d: &dict::Dict, ow: &String) -> String {
+    match d.get(&normalize(&ow)) {
         Some(c) => c.clone(),
         None => ow.clone(),
     }
 }
 
 pub fn do_work(d: &dict::Dict, w: &String) -> String {
-    convert_word(d, w)
+    let sylvec: Vec<String> = syllable(d, w)
+        .iter()
+        .map(|&s| convert_syllable(d, &s))
+        .collect();
+
+    let mut tmp = String::new();
+    let ret: String = sylvec.iter()
+        .fold(tmp, |ref mut acc, &s| acc.push_str(s.as_ref()));
+
+    ret
 }
 
 pub fn get_dict() -> dict::Dict {
-    let mut ret = dict::new();
-    dict::init(&mut ret);
+    let mut ret = dict::Dict::new();
+    ret.init();
     ret
 }
