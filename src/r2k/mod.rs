@@ -2,22 +2,49 @@ use std::cmp;
 
 mod dict;
 
+// do_work :: Dict -> String -> String
+// do_work = concat $ map convert_syllable $ syllable
+//
+// syllable :: Dict -> String -> [String]
+// syllable _ [] = []
+// syllable d s@(x:xs)
+//     | fst cond = (fst $ snd $ cond):(syllable d (snd $ snd $ cond))
+//     | otherwise = [x]:(syllable d xs)
+//     where
+//          max = let len = length s in if (>) len 3 then 3 else len
+//       -- aux :: Int -> Dict -> String -> (Bool, (String, String))
+//          aux 0 _ _ = (false, ([], []))
+//          aux _ _ [] = (false, ([], []))
+//          aux n d s
+//              | contains_key d (take n s) = (true, (take n s, drop n s)
+//              | otherwise = syllable (n-1) d s
+//          cond = aux max d s
+
 fn syllable(d: &dict::Dict, original: &String) -> Vec<String> {
+    if original.len() == 0 {
+        return vec![];
+    }
     let mut ret: Vec<String> = vec![];
     let maxlen = cmp::min(original.chars().count() + 1, 4);
 
     for l in (1..maxlen).rev() {
-        let tmp = original.chars().take(l).collect();
+        let tmp: String = original.chars().take(l).collect();
 
-        if d.contains_key(&(normalize(&tmp))) {
-            let skipped = original.chars().skip(l).collect();
+        let cond = d.contains_key(&(normalize(&tmp)));
+        if cond {
+            ret.push(tmp);
+            let skipped: String = original.chars().skip(l).collect();
             let mut rest = syllable(d, &skipped);
 
             ret.append(&mut rest);
-            break;
+
+            return ret;
         }
     }
 
+    let skipped: String = original.chars().skip(1).collect();
+    let mut rest = syllable(d, &skipped);
+    ret.append(&mut rest);
     ret
 }
 
@@ -36,14 +63,15 @@ fn convert_syllable(d: &dict::Dict, ow: &String) -> String {
 }
 
 pub fn do_work(d: &dict::Dict, w: &String) -> String {
+    let mut ret = String::new();
     let sylvec: Vec<String> = syllable(d, w)
         .iter()
-        .map(|&s| convert_syllable(d, &s))
+        .map(|ref s| convert_syllable(d, &s))
         .collect();
 
-    let mut tmp = String::new();
-    let ret: String = sylvec.iter()
-        .fold(tmp, |ref mut acc, &s| acc.push_str(s.as_ref()));
+    for s in sylvec {
+        ret.push_str(s.as_str());
+    }
 
     ret
 }
