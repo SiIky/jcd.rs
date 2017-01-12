@@ -36,7 +36,7 @@ Some examples:
 | **rarirurero** and **lalilulelo** | **らりるれろ** (Same with katakana) |
 | **maccha** (not **matcha**)       | **まっちゃ**                        |
 | **matcha**                        | **まtちゃ**                         |
-| **kka ssa tta hha**               | **っか っさ った っは っら**        |
+| **kka ssa tta hha rra**           | **っか っさ った っは っら**        |
 
 [0]: https://en.wikipedia.org/wiki/Hepburn_romanization#Variants_of_Hepburn_romanization
 [1]: https://en.wikipedia.org/wiki/Macron
