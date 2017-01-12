@@ -22,20 +22,21 @@ Hyphen (`-`) is always converted to the [chouonpu][3] (`ー`).
 `m` (or `M`) is never converted to `ん` (or `ン`).
 
 Some examples:
-| Romaji                        | Kana                              |
-| :---------------------------: | :-------------------------------: |
-| `hiragana`                    | `ひらがな`                        |
-| `KATakANA` and `KATAKANA`     | `カタカナ`                        |
-| `CHOKORE-TO`                  | `チョコレート`                    |
-| `nippon`                      | `にっぽん`                        |
-| `kan'i`                       | `かんい`                          |
-| `kani`                        | `かに`                            |
-| `shin'you`                    | `しんよう`                        |
-| `shinyou`                     | `しにょう`                        |
-| `rarirurero` and `lalilulelo` | `らりるれろ` (Same with katakana) |
-| `maccha` (not `matcha`)       | `まっちゃ`                        |
-| `matcha`                      | `まtちゃ`                         |
-| `kka ssa tta hha`             | `っか っさ った っは っら`        |
+
+| Romaji                            | Kana                                |
+| :-------------------------------: | :---------------------------------: |
+| **hiragana**                      | **ひらがな**                        |
+| **KATakANA** and **KATAKANA**     | **カタカナ**                        |
+| **CHOKORE-TO**                    | **チョコレート**                    |
+| **nippon**                        | **にっぽん**                        |
+| **kan'i**                         | **かんい**                          |
+| **kani**                          | **かに**                            |
+| **shin'you**                      | **しんよう**                        |
+| **shinyou**                       | **しにょう**                        |
+| **rarirurero** and **lalilulelo** | **らりるれろ** (Same with katakana) |
+| **maccha** (not **matcha**)       | **まっちゃ**                        |
+| **matcha**                        | **まtちゃ**                         |
+| **kka ssa tta hha**               | **っか っさ った っは っら**        |
 
 [0]: https://en.wikipedia.org/wiki/Hepburn_romanization#Variants_of_Hepburn_romanization
 [1]: https://en.wikipedia.org/wiki/Macron
