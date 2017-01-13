@@ -1,7 +1,10 @@
 [package]
 name = "jcdrs"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["SiIky <siiky@users.noreply.github.com>"]
+repository = "https://github.com/siiky/jcdrs"
 
 [dependencies]
-clap = "2.19.3"
+clap = "*"
+unicode-normalization = "*"
+unicode-jp = "*"
