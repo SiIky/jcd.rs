@@ -1,6 +1,6 @@
 use std::cmp;
 
-mod dict;
+pub mod dict;
 
 // do_work :: Dict -> String -> String
 // do_work = concat $ map convert_syllable $ syllable
@@ -42,9 +42,14 @@ fn syllable(d: &dict::Dict, original: &String) -> Vec<String> {
         }
     }
 
+    // if a match wasn't found, add the first char to ret
+    let mut taken: Vec<String> = vec![original.chars().take(1).collect()];
+    ret.append(&mut taken);
+
     let skipped: String = original.chars().skip(1).collect();
     let mut rest = syllable(d, &skipped);
     ret.append(&mut rest);
+
     ret
 }
 

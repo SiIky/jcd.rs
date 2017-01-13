@@ -8,6 +8,8 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 mod io;
 mod r2k;
 
+use r2k::dict;
+
 fn main() {
     // let mut args: env::Args = env::args();
     // args.next();
@@ -15,41 +17,83 @@ fn main() {
     // for arg in args { let tmp = r2k::do_work(&map, &arg); println!("\"{}\"\t=>\t{:?}", arg, tmp); }
     // println!();
 
-    // let file = io::get_file();
-    // if let None = file { return; }
+    let _file = match io::get_file() {
+        None => return,
+        Some(f) => f,
+    };
 
-    let _map = r2k::get_dict();
+    let map: dict::Dict = r2k::get_dict();
 
     println!("before");
     let matches = clap();
-    let subcmd = match matches.subcommand_name() {
-        None => panic!("No Subcommand was used!"),
-        Some(sc) => sc,
-    };
-    let sub_matches = match matches.subcommand_matches(subcmd) {
-        None => panic!("No matches for subcommand!"),
-        Some(sm) => sm,
+
+    let (subcmd, sub_matches) = matches.subcommand();
+    let sub_matches = match sub_matches {
+        None => panic!("No options given to subcommand {}", subcmd),
+        Some(s) => s,
     };
     println!("after");
 
     match subcmd {
-        "add" => handle_add(),
-        "search" => handle_search(),
-        "convert" => handle_convert(),
-        _ => panic!("Command not recognized!"),
+        "add" => handle_add(&map, sub_matches),
+        "search" => handle_search(&map, sub_matches),
+        "convert" => handle_convert(&map, sub_matches),
+        _ => panic!("Command not recognized!"),// NOTE: maybe unreachable!() could be used instead
     }
 }
 
-fn handle_add() {
+fn handle_add(_d: &dict::Dict, m: &ArgMatches) {
+    let romaji = m.values_of("romaji");
+    let hira = m.values_of("hiragana");
+    let kata = m.values_of("katakana");
+    let meaning = m.values_of("meaning");
+    let kanji = m.values_of("kanji");
+
+    let aux = |opt: &str, valsopt| {
+        if let Some(vals) = valsopt {
+            print!("{} args:", opt.to_string());
+            for val in vals {
+                print!(" {}", val);
+            }
+        }
+        println!();
+    };
+
+    // gives ownership of the variables
+    aux("romaji", romaji);
+    aux("hiragana", hira);
+    aux("katakana", kata);
+    aux("meaning", meaning);
+    aux("kanji", kanji);
+}
+
+fn handle_search(_d: &dict::Dict, _m: &ArgMatches) {
     unimplemented!();
 }
 
-fn handle_search() {
-    unimplemented!();
-}
+fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
+    let romaji = m.values_of("romaji");
+    // TODO: have the values of hira (kata) changed to uppercase (lowercae)
+    let hira = m.values_of("hiragana");
+    let kata = m.values_of("katakana");
 
-fn handle_convert() {
-    unimplemented!();
+    let aux = |opt: &str, valsopt| {
+        if let Some(vals) = valsopt {
+            print!("{} args:", opt.to_string());
+            let mut tmp = String::new();
+            for val in vals {
+                print!(" {}", val);
+                let res = r2k::do_work(d, &String::from(val));
+                tmp.push_str(res.as_ref());
+            }
+            println!("Final: {}", tmp);
+        }
+    };
+
+    // gives ownership of the variables
+    aux("romaji", romaji);
+    aux("hiragana", hira);
+    aux("katakana", kata);
 }
 
 ///
@@ -91,8 +135,6 @@ fn handle_convert() {
 ///
 fn clap() -> ArgMatches<'static> {
     // default settings for the common args between subcommands
-    // needs more testing cuz i suck at rust
-    // think App has Clone
     let romaji = Arg::with_name("romaji")
         .long("romaji")
         .short("r")
@@ -116,7 +158,10 @@ fn clap() -> ArgMatches<'static> {
     let kanji = Arg::with_name("kanji")
         .long("kanji")
         .short("K")
-        .takes_value(true);
+        .takes_value(true)
+        .multiple(true); // If there are spaces between chars
+                         // they're counted as multiple values
+                         // and the program crashes
 
     App::new("Japanese Command-line Dictionary")
         .author(crate_authors!())
