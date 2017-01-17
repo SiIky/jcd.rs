@@ -1,9 +1,7 @@
 #[macro_use]
 extern crate clap;
 
-// use std::env;
-
-use clap::{App, Arg, ArgMatches, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand, Values};
 
 mod io;
 mod r2k;
@@ -11,12 +9,6 @@ mod r2k;
 use r2k::dict;
 
 fn main() {
-    // let mut args: env::Args = env::args();
-    // args.next();
-    // let args = args;
-    // for arg in args { let tmp = r2k::do_work(&map, &arg); println!("\"{}\"\t=>\t{:?}", arg, tmp); }
-    // println!();
-
     let _file = match io::get_file() {
         None => return,
         Some(f) => f,
@@ -29,17 +21,20 @@ fn main() {
 
     let (subcmd, sub_matches) = matches.subcommand();
     let sub_matches = match sub_matches {
+        // NOTE: maybe unreachable!() could be used instead
         None => panic!("No options given to subcommand {}", subcmd),
         Some(s) => s,
     };
-    println!("after");
 
     match subcmd {
         "add" => handle_add(&map, sub_matches),
         "search" => handle_search(&map, sub_matches),
         "convert" => handle_convert(&map, sub_matches),
-        _ => panic!("Command not recognized!"),// NOTE: maybe unreachable!() could be used instead
+        // NOTE: maybe unreachable!() could be used instead
+        _ => panic!("Command not recognized!"),
     }
+
+    println!("after");
 }
 
 fn handle_add(_d: &dict::Dict, m: &ArgMatches) {
@@ -49,7 +44,7 @@ fn handle_add(_d: &dict::Dict, m: &ArgMatches) {
     let meaning = m.values_of("meaning");
     let kanji = m.values_of("kanji");
 
-    let aux = |opt: &str, valsopt| {
+    let aux = |opt: &str, valsopt: Option<Values>| {
         if let Some(vals) = valsopt {
             print!("{} args:", opt.to_string());
             for val in vals {
@@ -59,12 +54,11 @@ fn handle_add(_d: &dict::Dict, m: &ArgMatches) {
         println!();
     };
 
-    // gives ownership of the variables
-    aux("romaji", romaji);
-    aux("hiragana", hira);
-    aux("katakana", kata);
-    aux("meaning", meaning);
-    aux("kanji", kanji);
+    aux("-r", romaji);
+    aux("-h", hira);
+    aux("-k", kata);
+    aux("-m", meaning);
+    aux("-k", kanji);
 }
 
 fn handle_search(_d: &dict::Dict, _m: &ArgMatches) {
@@ -72,12 +66,41 @@ fn handle_search(_d: &dict::Dict, _m: &ArgMatches) {
 }
 
 fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
+    // TODO: Make a more general approach to turn `hira`/`kata`
+    // to lower/upper-case.
     let romaji = m.values_of("romaji");
-    // TODO: have the values of hira (kata) changed to uppercase (lowercae)
     let hira = m.values_of("hiragana");
     let kata = m.values_of("katakana");
 
-    let aux = |opt: &str, valsopt| {
+    let aux4kata = |opt: &str, valsopt: Option<Values>| {
+        if let Some(vals) = valsopt {
+            print!("{} args:", opt.to_string());
+            let mut tmp = String::new();
+            for val in vals {
+                print!(" {}", val);
+                let val = val.to_uppercase();
+                let res = r2k::do_work(d, &String::from(val));
+                tmp.push_str(res.as_ref());
+            }
+            println!("\nFinal: {}", tmp);
+        }
+    };
+
+    let aux4hira = |opt: &str, valsopt: Option<Values>| {
+        if let Some(vals) = valsopt {
+            print!("{} args:", opt.to_string());
+            let mut tmp = String::new();
+            for val in vals {
+                print!(" {}", val);
+                let val = val.to_lowercase();
+                let res = r2k::do_work(d, &String::from(val));
+                tmp.push_str(res.as_ref());
+            }
+            println!("\nFinal: {}", tmp);
+        }
+    };
+
+    let aux4romaji = |opt: &str, valsopt: Option<Values>| {
         if let Some(vals) = valsopt {
             print!("{} args:", opt.to_string());
             let mut tmp = String::new();
@@ -86,14 +109,13 @@ fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
                 let res = r2k::do_work(d, &String::from(val));
                 tmp.push_str(res.as_ref());
             }
-            println!("Final: {}", tmp);
+            println!("\nFinal: {}", tmp);
         }
     };
 
-    // gives ownership of the variables
-    aux("romaji", romaji);
-    aux("hiragana", hira);
-    aux("katakana", kata);
+    aux4hira("-h", hira);
+    aux4kata("-k", kata);
+    aux4romaji("-r", romaji);
 }
 
 ///
