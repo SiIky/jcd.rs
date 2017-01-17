@@ -14,9 +14,9 @@ jcd search -r ushi # auto detects kana to use
 jcd search -h ushi # converts to hiragana (ignores case)
 jcd search -k ushi # converts to katakana (ignores case)
 # convert arguments to kana and print to stdout
-jcd r2k -r KATAKANA ga wakaru # auto detects
-jcd r2k -h KATAKANA ga wakaru # converts to hiragana
-jcd r2k -k KATAKANA ga wakaru # converts to katakana
+jcd convert -r KATAKANA ga wakaru # auto detects
+jcd convert -h KATAKANA ga wakaru # converts to hiragana
+jcd convert -k KATAKANA ga wakaru # converts to katakana
 ```
 
 See [main.rs][main] for more details.
@@ -31,20 +31,19 @@ Hyphen (`-`) is always converted to the [chouonpu][3] (`ー`).
 
 ### Some examples:
 
-| Romaji                        | Kana                              |
-| :---------------------------: | :-------------------------------: |
-| `hiragana`                    | `ひらがな`                        |
-| `KATakANA` and `KATAKANA`     | `カタカナ`                        |
-| `CHOKORE-TO`                  | `チョコレート`                    |
-| `nippon`                      | `にっぽん`                        |
-| `kan'i`                       | `かんい`                          |
-| `kani`                        | `かに`                            |
-| `shin'you`                    | `しんよう`                        |
-| `shinyou`                     | `しにょう`                        |
-| `rarirurero` and `lalilulelo` | `らりるれろ` (Same with katakana) |
-| `maccha` (not `matcha`)       | `まっちゃ`                        |
-| `matcha`                      | `まtちゃ`                         |
-| `kka ssa tta hha rra`         | `っか っさ った っは っら`        |
+| Romaji                    | Kana                       |
+| :-----------------------: | :------------------------: |
+| `hiragana`                | `ひらがな`                 |
+| `KATakANA` and `KATAKANA` | `カタカナ`                 |
+| `CHOKORE-TO`              | `チョコレート`             |
+| `nippon`                  | `にっぽん`                 |
+| `kan'i`                   | `かんい`                   |
+| `kani`                    | `かに`                     |
+| `shin'you`                | `しんよう`                 |
+| `shinyou`                 | `しにょう`                 |
+| `maccha` (not `matcha`)   | `まっちゃ`                 |
+| `matcha`                  | `まtちゃ`                  |
+| `kka ssa tta hha rra`     | `っか っさ った っは っら` |
 
 ## Notes about the project and Rust
 

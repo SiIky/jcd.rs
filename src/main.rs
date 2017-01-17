@@ -72,31 +72,29 @@ fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
     let hira = m.values_of("hiragana");
     let kata = m.values_of("katakana");
 
-    let aux4kata = |opt: &str, valsopt: Option<Values>| {
-        if let Some(vals) = valsopt {
-            print!("{} args:", opt.to_string());
-            let mut tmp = String::new();
-            for val in vals {
-                print!(" {}", val);
-                let val = val.to_uppercase();
-                let res = r2k::do_work(d, &String::from(val));
-                tmp.push_str(res.as_ref());
-            }
-            println!("\nFinal: {}", tmp);
-        }
-    };
-
     let aux4hira = |opt: &str, valsopt: Option<Values>| {
         if let Some(vals) = valsopt {
             print!("{} args:", opt.to_string());
             let mut tmp = String::new();
             for val in vals {
                 print!(" {}", val);
-                let val = val.to_lowercase();
-                let res = r2k::do_work(d, &String::from(val));
+                let res = r2k::do_work(d, &String::from(val.to_lowercase()));
                 tmp.push_str(res.as_ref());
             }
-            println!("\nFinal: {}", tmp);
+            println!("\n{} result: {}", opt, tmp);
+        }
+    };
+
+    let aux4kata = |opt: &str, valsopt: Option<Values>| {
+        if let Some(vals) = valsopt {
+            print!("{} args:", opt.to_string());
+            let mut tmp = String::new();
+            for val in vals {
+                print!(" {}", val);
+                let res = r2k::do_work(d, &String::from(val.to_uppercase()));
+                tmp.push_str(res.as_ref());
+            }
+            println!("\n{} result: {}", opt, tmp);
         }
     };
 
@@ -109,7 +107,7 @@ fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
                 let res = r2k::do_work(d, &String::from(val));
                 tmp.push_str(res.as_ref());
             }
-            println!("\nFinal: {}", tmp);
+            println!("\n{} result: {}", opt, tmp);
         }
     };
 
@@ -122,38 +120,38 @@ fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
 /// Usage: (This comment will be used to describe the expected behavior and the program must fit this
 ///        description, not the other way around)
 ///
-/// * `add`: Add a word to the dictionary.
-///     * `-r`: Convert a word and add it to the dictionary. (Use auto detection);
-///     * `-h`: Convert a word to hiragana and add it to the dictionary. (Don't use auto detection);
-///     * `-k`: Convert a word to katakana and add it to the dictionary. (Don't use auto detection);
-///     * `-K`: Add kanji to the kanji field. (Don't perform any kind of processing);
-///     * `-m`: Add text to the meaning field. (Don't perform any kind of processing);
+/// - [ ] `add`: Add a word to the dictionary.
+///     - [ ] `-r`: Convert a word and add it to the dictionary. (Use auto detection);
+///     - [ ] `-h`: Convert a word to hiragana and add it to the dictionary. (Don't use auto detection);
+///     - [ ] `-k`: Convert a word to katakana and add it to the dictionary. (Don't use auto detection);
+///     - [ ] `-K`: Add kanji to the kanji field. (Don't perform any kind of processing);
+///     - [ ] `-m`: Add text to the meaning field. (Don't perform any kind of processing);
 ///
 ///         NOTE: At least one of `-r`, `-h` and `-k` must be used, but if more than one of these is present
 ///         they will be checked in order and only the first match will taken in account.
 ///         Order of precedence is `-r`, `-h` and `-k`.
 ///         `-m` is required (afterall, this is supposed to be a "dictionary").
 ///
-/// * `search`: Search for a word and (if it exists in the dictionary) give back its entry.
-///     * `-r`: Autodetect and convert words according to case;
-///     * `-h`: Don't autodetect, convert everything to hiragana;
-///     * `-k`: Don't autodetect, convert everything to katakana;
-///     * `-K`: Add kanji to the entry of the input word (i.e., don't convert);
-///     * `-m`: Add input as the meaning;
+/// - [ ] `search`: Search for a word and (if it exists in the dictionary) give back its entry.
+///     - [ ] `-r`: Autodetect and convert words according to case;
+///     - [ ] `-h`: Don't autodetect, convert everything to hiragana;
+///     - [ ] `-k`: Don't autodetect, convert everything to katakana;
+///     - [ ] `-K`: Add kanji to the entry of the input word (i.e., don't convert);
+///     - [ ] `-m`: Add input as the meaning;
 ///
 ///         NOTE: At least one of these must be used. IF more than one is used (TBD):
 ///             1. Use a flag to determine what to do;
 ///             2. Show entries that match all of the options used;
 ///             3. Show entries that match at least one of the options used;
 ///
-/// * `convert`: Convert everything to kana. (NOTE: maybe have this as an external tool/crate?)
-///     * `-r`: Autodetect and convert words according to case;
-///     * `-h`: Don't autodetect, convert everything to hiragana;
-///     * `-k`: Don't autodetect, convert everything to katakana;
+/// - [X] `convert`: Convert everything to kana. (NOTE: maybe have this as an external tool/crate?)
+///     - [X] `-r`: Autodetect and convert words according to case;
+///     - [X] `-h`: Don't autodetect, convert everything to hiragana;
+///     - [X] `-k`: Don't autodetect, convert everything to katakana;
 ///
-///         NOTE: At least one of these must be used. If more than one is used (TBD):
-///             * Process every option;
-///             * Check options in order and process only the first one;
+///         NOTE: At least one of these must be used. If more than one is used:
+///             - [X] **Process every option;** (Current behavior, makes the more sense out of the two)
+///             - [ ] ~~Check options in order and process only the first one;~~
 ///
 fn clap() -> ArgMatches<'static> {
     // default settings for the common args between subcommands
@@ -193,11 +191,14 @@ fn clap() -> ArgMatches<'static> {
         .subcommand(SubCommand::with_name("add")
             .about("Add an entry to the dictionary.")
             .args(&[romaji.clone()
-                        .help("Convert a word and add to the dictionary."),
+                        .help("Convert a word and add to the dictionary.")
+                        .required_unless_one(&["hiragana", "katakana"]),
                     hiragana.clone()
-                        .help("Convert a word to hiragana and add it to the dictionary."),
+                        .help("Convert a word to hiragana and add it to the dictionary.")
+                        .required_unless_one(&["romaji", "katakana"]),
                     katakana.clone()
-                        .help("Convert a word to katakana and add it to the dictionary."),
+                        .help("Convert a word to katakana and add it to the dictionary.")
+                        .required_unless_one(&["hiragana", "romaji"]),
                     kanji.clone()
                         .help("Add kanji to the kanji field."),
                     meaning.clone()
@@ -206,11 +207,14 @@ fn clap() -> ArgMatches<'static> {
         .subcommand(SubCommand::with_name("search")
             .about("Search the dictionary.")
             .args(&[romaji.clone()
-                        .help("Convert a word to kana and search in the dictionary."),
+                        .help("Convert a word to kana and search in the dictionary.")
+                        .required_unless_one(&["hiragana", "katakana"]),
                     hiragana.clone()
-                        .help("Convert a word to hiragana and search in the dictionary."),
+                        .help("Convert a word to hiragana and search in the dictionary.")
+                        .required_unless_one(&["katakana", "romaji"]),
                     katakana.clone()
-                        .help("Convert a word to katakana and search in the dictionary."),
+                        .help("Convert a word to katakana and search in the dictionary.")
+                        .required_unless_one(&["hiragana", "romaji"]),
                     kanji.clone()
                         .help("Searches for kanji in the kanji field."),
                     meaning.clone()
