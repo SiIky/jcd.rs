@@ -2,6 +2,8 @@ use std::cmp;
 
 pub mod dict;
 
+use dict::{Dict, KanaConvertionTable};
+
 // do_work :: Dict -> String -> String
 // do_work = concat $ map convert_syllable $ syllable
 //
@@ -82,7 +84,7 @@ pub fn do_work(d: &dict::Dict, w: &String) -> String {
 }
 
 pub fn get_dict() -> dict::Dict {
-    let mut ret = dict::Dict::new();
+    let mut ret = Dict::new();
     ret.init();
     ret
 }

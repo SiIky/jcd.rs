@@ -1,37 +1,16 @@
 use std::collections::HashMap;
 
-const DEFAULT_CAPACITY: usize = 213;
+const DEFAULT_CAPACITY: usize = 218;
 
-// type Dict = HashMap<String, String>;
-pub struct Dict {
-    map: HashMap<String, String>,
+pub type Dict = HashMap<String, String>;
+
+pub trait KanaConvertionTable {
+    fn new() -> Dict;
+    fn init(&mut self);
 }
 
-// for later
-// trait ConvertionTable { fn new() -> Dict; fn init(&mut self); }
-// impl ConvertionTable for HashMap<String, String> {
-impl Dict {
-    fn is_empty(&self) -> bool {
-        self.map.is_empty()
-    }
-
-    fn insert(&mut self, k: String, v: String) {
-        self.map.insert(k, v);
-    }
-
-    pub fn get(&self, k: &String) -> Option<&String> {
-        self.map.get(k)
-    }
-
-    pub fn contains_key(&self, k: &String) -> bool {
-        self.map.contains_key(k)
-    }
-
-    fn clear(&mut self) {
-        self.map.clear();
-    }
-
-    pub fn init(&mut self) {
+impl KanaConvertionTable for Dict {
+    fn init(&mut self) {
         if !self.is_empty() {
             self.clear();
         }
@@ -271,8 +250,8 @@ impl Dict {
         }
     }
 
-    pub fn new() -> Dict {
-        Dict { map: HashMap::with_capacity(DEFAULT_CAPACITY) }
+    fn new() -> Dict {
+        Dict::with_capacity(DEFAULT_CAPACITY)
     }
 }
 
