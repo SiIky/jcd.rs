@@ -1,12 +1,12 @@
 #[macro_use]
 extern crate clap;
-
-use clap::{App, Arg, ArgMatches, SubCommand, Values};
-
-mod io;
+// extern crate r2k;
 mod r2k;
 
+use clap::{App, Arg, ArgMatches, SubCommand, Values};
 use r2k::dict;
+
+mod io;
 
 fn main() {
     let _file = match io::get_file() {
@@ -37,28 +37,8 @@ fn main() {
     println!("after");
 }
 
-fn handle_add(_d: &dict::Dict, m: &ArgMatches) {
-    let romaji = m.values_of("romaji");
-    let hira = m.values_of("hiragana");
-    let kata = m.values_of("katakana");
-    let meaning = m.values_of("meaning");
-    let kanji = m.values_of("kanji");
-
-    let aux = |opt: &str, valsopt: Option<Values>| {
-        if let Some(vals) = valsopt {
-            print!("{} args:", opt.to_string());
-            for val in vals {
-                print!(" {}", val);
-            }
-        }
-        println!();
-    };
-
-    aux("-r", romaji);
-    aux("-h", hira);
-    aux("-k", kata);
-    aux("-m", meaning);
-    aux("-k", kanji);
+fn handle_add(_d: &dict::Dict, _m: &ArgMatches) {
+    unimplemented!();
 }
 
 fn handle_search(_d: &dict::Dict, _m: &ArgMatches) {
@@ -67,11 +47,13 @@ fn handle_search(_d: &dict::Dict, _m: &ArgMatches) {
 
 fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
     // TODO: Make a more general approach to turn `hira`/`kata`
-    // to lower/upper-case.
+    // to lower/upper-case. Maybe related to the TODOs below.
     let romaji = m.values_of("romaji");
     let hira = m.values_of("hiragana");
     let kata = m.values_of("katakana");
 
+    // TODO: In case a string is not considered a key,
+    // its case is changed to lowercase.
     let aux4hira = |opt: &str, valsopt: Option<Values>| {
         if let Some(vals) = valsopt {
             print!("{} args:", opt.to_string());
@@ -85,6 +67,8 @@ fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
         }
     };
 
+    // TODO: In case a string is not considered a key,
+    // its case is changed to uppercase.
     let aux4kata = |opt: &str, valsopt: Option<Values>| {
         if let Some(vals) = valsopt {
             print!("{} args:", opt.to_string());
@@ -222,10 +206,10 @@ fn clap() -> ArgMatches<'static> {
         .subcommand(SubCommand::with_name("convert")
             .about("Convert text to kana.")
             .args(&[romaji.clone()
-                        .help("Convert a word to kana and search in the dictionary."),
+                        .help("Convert text to kana."),
                     hiragana.clone()
-                        .help("Convert a word to hiragana and search in the dictionary."),
+                        .help("Convert text to hiragana."),
                     katakana.clone()
-                        .help("Convert a word to katakana and search in the dictionary.")]))
+                        .help("Convert text to katakana.")]))
         .get_matches()
 }

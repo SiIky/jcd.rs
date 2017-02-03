@@ -1,0 +1,3 @@
+[submodule "src/r2k"]
+	path = src/r2k
+	url = https://github.com/siiky/r2k-lib
