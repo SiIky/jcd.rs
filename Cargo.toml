@@ -6,3 +6,4 @@ repository = "https://github.com/siiky/jcdrs"
 
 [dependencies]
 clap = "*"
+libr2k = { version = "*", path = "./r2k" }
