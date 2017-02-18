@@ -1,10 +1,9 @@
 #[macro_use]
 extern crate clap;
-// extern crate r2k;
-mod r2k;
+extern crate libr2k;
 
-use clap::{App, Arg, ArgMatches, SubCommand, Values};
-use r2k::dict;
+use clap::{App, Arg, ArgMatches, SubCommand};
+use libr2k::dict::{Dict, KanaConvertionTable};
 
 mod io;
 
@@ -14,15 +13,15 @@ fn main() {
         Some(f) => f,
     };
 
-    let map: dict::Dict = r2k::get_dict();
+    let map: Dict = Dict::dnew();
 
-    println!("before");
     let matches = clap();
 
+    // Get the subcommand invoked and associated arguments.
     let (subcmd, sub_matches) = matches.subcommand();
     let sub_matches = match sub_matches {
         // NOTE: maybe unreachable!() could be used instead
-        None => panic!("No options given to subcommand {}", subcmd),
+        None => panic!("No options given to subcommand `{}`", subcmd),
         Some(s) => s,
     };
 
@@ -33,76 +32,50 @@ fn main() {
         // NOTE: maybe unreachable!() could be used instead
         _ => panic!("Command not recognized!"),
     }
-
-    println!("after");
 }
 
-fn handle_add(_d: &dict::Dict, _m: &ArgMatches) {
+fn handle_add(_d: &Dict, _m: &ArgMatches) {
+    // TODO: Implement this.
     unimplemented!();
 }
 
-fn handle_search(_d: &dict::Dict, _m: &ArgMatches) {
+fn handle_search(_d: &Dict, _m: &ArgMatches) {
+    // TODO: Implement this.
     unimplemented!();
 }
 
-fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
+fn handle_convert(d: &Dict, m: &ArgMatches) {
     // TODO: Make a more general approach to turn `hira`/`kata`
     // to lower/upper-case. Maybe related to the TODOs below.
     let romaji = m.values_of("romaji");
     let hira = m.values_of("hiragana");
     let kata = m.values_of("katakana");
 
-    // TODO: In case a string is not considered a key,
-    // its case is changed to lowercase.
-    let aux4hira = |opt: &str, valsopt: Option<Values>| {
-        if let Some(vals) = valsopt {
-            print!("{} args:", opt.to_string());
-            let mut tmp = String::new();
-            for val in vals {
-                print!(" {}", val);
-                let res = r2k::do_work(d, &String::from(val.to_lowercase()));
-                tmp.push_str(res.as_ref());
-            }
-            println!("\n{} result: {}", opt, tmp);
+    if let Some(hira) = hira {
+        for val in hira {
+            print!("{}", libr2k::to_hiragana(d, &val.to_string()));
         }
-    };
+        println!();
+    }
 
-    // TODO: In case a string is not considered a key,
-    // its case is changed to uppercase.
-    let aux4kata = |opt: &str, valsopt: Option<Values>| {
-        if let Some(vals) = valsopt {
-            print!("{} args:", opt.to_string());
-            let mut tmp = String::new();
-            for val in vals {
-                print!(" {}", val);
-                let res = r2k::do_work(d, &String::from(val.to_uppercase()));
-                tmp.push_str(res.as_ref());
-            }
-            println!("\n{} result: {}", opt, tmp);
+    if let Some(kata) = kata {
+        for val in kata {
+            print!("{}", libr2k::to_katakana(d, &val.to_string()));
         }
-    };
+        println!();
+    }
 
-    let aux4romaji = |opt: &str, valsopt: Option<Values>| {
-        if let Some(vals) = valsopt {
-            print!("{} args:", opt.to_string());
-            let mut tmp = String::new();
-            for val in vals {
-                print!(" {}", val);
-                let res = r2k::do_work(d, &String::from(val));
-                tmp.push_str(res.as_ref());
-            }
-            println!("\n{} result: {}", opt, tmp);
+    if let Some(romaji) = romaji {
+        for val in romaji {
+            print!("{}", libr2k::to_kana(d, &val.to_string()));
         }
-    };
-
-    aux4hira("-h", hira);
-    aux4kata("-k", kata);
-    aux4romaji("-r", romaji);
+        println!();
+    }
 }
 
 ///
-/// Usage: (This comment will be used to describe the expected behavior and the program must fit this
-///        description, not the other way around)
+/// Usage: (This comment will be used to describe the expected behavior and the program must fit
+/// this description, not the other way around)
 ///
 /// - [ ] `add`: Add a word to the dictionary.
 ///     - [ ] `-r`: Convert a word and add it to the dictionary. (Use auto detection);
@@ -134,7 +107,7 @@ fn handle_convert(d: &dict::Dict, m: &ArgMatches) {
 ///     - [X] `-k`: Don't autodetect, convert everything to katakana;
 ///
 ///         NOTE: At least one of these must be used. If more than one is used:
-///             - [X] **Process every option;** (Current behavior, makes the more sense out of the two)
+///             - [X] **Process every option;** (Current behavior, makes more sense out of the two)
 ///             - [ ] ~~Check options in order and process only the first one;~~
 ///
 fn clap() -> ArgMatches<'static> {
@@ -144,28 +117,32 @@ fn clap() -> ArgMatches<'static> {
         .short("r")
         .takes_value(true)
         .multiple(true);
+
     let hiragana = Arg::with_name("hiragana")
         .long("hiragana")
         .short("h")
         .takes_value(true)
         .multiple(true);
+
     let katakana = Arg::with_name("katakana")
         .long("katakana")
         .short("k")
         .takes_value(true)
         .multiple(true);
+
     let meaning = Arg::with_name("meaning")
         .long("meaning")
         .short("m")
         .takes_value(true)
         .multiple(true);
+
     let kanji = Arg::with_name("kanji")
         .long("kanji")
         .short("K")
         .takes_value(true)
         .multiple(true); // If there are spaces between chars
-                         // they're counted as multiple values
-                         // and the program crashes
+    // they're counted as multiple values
+    // and the program crashes
 
     App::new("Japanese Command-line Dictionary")
         .author(crate_authors!())
