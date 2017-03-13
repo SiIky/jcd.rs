@@ -13,14 +13,13 @@ fn main() {
         Some(f) => f,
     };
 
+
     let map: Dict = Dict::dnew();
 
-    let matches = clap();
-
     // Get the subcommand invoked and associated arguments.
-    let (subcmd, sub_matches) = matches.subcommand();
-    let sub_matches = match sub_matches {
-        // NOTE: maybe unreachable!() could be used instead
+    let matches: ArgMatches = clap();
+    let (cmd, matches) = matches.subcommand();
+    let matches = match matches {
         Some(s) => s,
         None => return,
     };
