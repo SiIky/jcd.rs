@@ -2,11 +2,9 @@ use std::env;
 use std::fs::File;
 use std::path::PathBuf;
 
-pub fn get_file() -> Option<File> {
-    let jcd = env::var("JCD_DIR");
-    let home = env::var("HOME");
 
-    let base = match (jcd, home) {
+pub fn get_file() -> Option<File> {
+    let base = match (env::var("JCD_DIR"), env::var("HOME")) {
         (Ok(j), _) => j,
         (_, Ok(h)) => h,
         _ => return None,
@@ -21,8 +19,5 @@ pub fn get_file() -> Option<File> {
         f => f,
     };
 
-    match ret {
-        Ok(f) => Some(f),
-        Err(_) => None,
-    }
+    ret.ok()
 }
