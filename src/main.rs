@@ -1,8 +1,8 @@
 #[macro_use]
 extern crate clap;
-extern crate libr2k;
-
 use clap::{App, Arg, ArgMatches, SubCommand};
+
+extern crate libr2k;
 use libr2k::dict::{Dict, KanaConvertionTable};
 
 mod io;
@@ -21,16 +21,15 @@ fn main() {
     let (subcmd, sub_matches) = matches.subcommand();
     let sub_matches = match sub_matches {
         // NOTE: maybe unreachable!() could be used instead
-        None => panic!("No options given to subcommand `{}`", subcmd),
         Some(s) => s,
+        None => return,
     };
 
-    match subcmd {
-        "add" => handle_add(&map, sub_matches),
-        "search" => handle_search(&map, sub_matches),
-        "convert" => handle_convert(&map, sub_matches),
-        // NOTE: maybe unreachable!() could be used instead
-        _ => panic!("Command not recognized!"),
+    match cmd {
+        "add" => handle_add(&map, matches),
+        "convert" => handle_convert(&map, matches),
+        "search" => handle_search(&map, matches),
+        _ => return,
     }
 }
 
