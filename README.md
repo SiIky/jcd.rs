@@ -21,9 +21,9 @@ jcd convert -k KATAKANA ga wakaru # converts to katakana
 
 See [main.rs][main] for more details.
 
-## Convertion method
+## Conversion method
 
-Convertion uses the [Modified Hepburn system][0], except for
+Conversion uses the [Modified Hepburn system][0], except for
 syllables with the [macron][1] or [circumflex][2], which is
 not implemented yet.
 Hyphen (`-`) is always converted to the [chouonpu][3] (`ー`).

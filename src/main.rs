@@ -3,7 +3,7 @@ extern crate clap;
 use clap::{App, Arg, ArgMatches, SubCommand};
 
 extern crate libr2k;
-use libr2k::dict::{Dict, KanaConvertionTable};
+use libr2k::dict::{Dict, KanaConversionTable};
 
 mod io;
 
