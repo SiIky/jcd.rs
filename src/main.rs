@@ -5,64 +5,47 @@ use std::io::prelude::*;
 extern crate clap;
 use clap::{App, Arg, ArgMatches, SubCommand, Values};
 
-extern crate libr2k;
-use libr2k::ConvType;
-use libr2k::dict::{Dict, KanaConversionTable};
+extern crate r2k;
+use r2k::conv_type::ConvType;
+use r2k::kana_table::KanaTable;
 
 mod io;
 
 fn main() {
-    fn handle_convert(d: &Dict, m: &ArgMatches) {
-        let romaji = m.values_of("romaji");
-        let hira = m.values_of("hiragana");
-        let kata = m.values_of("katakana");
-
-        // Insert a `&str` into a `ConvType`
-        fn cv2cv<T>(ct: &ConvType<T>, v: &str) -> ConvType<String> {
-            let v = v.to_string();
-            match ct {
-                &ConvType::Auto(_) => ConvType::Auto(v),
-                &ConvType::Hira(_) => ConvType::Hira(v),
-                &ConvType::Kata(_) => ConvType::Kata(v),
-            }
-        }
-
-        // Convert and print a `String` to `stdout`
-        fn aux<T>(d: &Dict, ct: ConvType<T>, ovals: Option<Values>) {
+    fn handle_convert(k: &KanaTable, m: &ArgMatches) {
+        fn aux<T>(k: &KanaTable, ct: ConvType<T>, ovals: Option<Values>) {
             if let Some(vals) = ovals {
-                for val in vals {
-                    print!("{}", libr2k::to_kana(d, cv2cv(&ct, val)));
-                }
-                println!();
+                let vals: String = vals.into_iter().collect();
+                println!("{}", k.convert(ct.map(|_| &vals)));
             }
         }
 
-        aux(d, ConvType::Auto(()), romaji);
-        aux(d, ConvType::Hira(()), hira);
-        aux(d, ConvType::Kata(()), kata);
+        aux(k, ConvType::Auto(()), m.values_of("romaji"));
+        aux(k, ConvType::Hira(()), m.values_of("hiragana"));
+        aux(k, ConvType::Kata(()), m.values_of("katakana"));
     }
 
-    fn handle_add(_d: &Dict, _m: &ArgMatches) {
+    fn handle_add(_d: &KanaTable, _m: &ArgMatches) {
         // TODO: Implement this.
-        handle_convert(_d, _m);
+        let d_file = match io::get_file() {
+            None => panic!("Error opening/creating the dictionary file."),
+            Some(f) => f,
+        };
+
+        let mut filein = BufWriter::new(&d_file);
+        if let Err(e) = filein.write("test test".as_bytes()) {
+            panic!("oh shiet: {}", e);
+        }
+
+        unimplemented!();
     }
 
-    fn handle_search(_d: &Dict, _m: &ArgMatches) {
+    fn handle_search(_d: &KanaTable, _m: &ArgMatches) {
         // TODO: Implement this.
-        handle_convert(_d, _m);
+        unimplemented!();
     }
 
-    let d_file = match io::get_file() {
-        None => panic!("Error opening/creating the dictionary file."),
-        Some(f) => f,
-    };
-
-    let mut filein = BufWriter::new(&d_file);
-    if let Err(e) = filein.write("test test".as_bytes()) {
-        panic!("oh shiet: {}", e);
-    }
-
-    let map: Dict = Dict::dnew();
+    let map: KanaTable = KanaTable::new();
 
     // Get the subcommand invoked and associated arguments.
     let matches: ArgMatches = clap();
@@ -76,7 +59,7 @@ fn main() {
         "add" => handle_add(&map, matches),
         "convert" => handle_convert(&map, matches),
         "search" => handle_search(&map, matches),
-        _ => return,
+        _ => unreachable!(),
     }
 }
 
