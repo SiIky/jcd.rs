@@ -13,16 +13,27 @@ mod io;
 
 fn main() {
     fn handle_convert(k: &KanaTable, m: &ArgMatches) {
-        fn aux<T>(k: &KanaTable, ct: ConvType<T>, ovals: Option<Values>) {
-            if let Some(vals) = ovals {
-                let vals: String = vals.into_iter().collect();
-                println!("{}", k.convert(ct.map(|_| &vals)));
-            }
+        fn aux(vals: Values) -> Vec<String> {
+            vals.into_iter().map(|x| x.to_string()).collect()
         }
 
-        aux(k, ConvType::Auto(()), m.values_of("romaji"));
-        aux(k, ConvType::Hira(()), m.values_of("hiragana"));
-        aux(k, ConvType::Kata(()), m.values_of("katakana"));
+        let do_work = |ct: ConvType<&str>| {
+            let tmp: Option<Values> = m.values_of(ct.unwrap());
+            let tmp: Option<Vec<String>> = tmp.map(|x| aux(x));
+
+            if let Some(v) = tmp {
+                for s in v {
+                    let ct = ct.map(|_| &s);
+                    let res = k.convert(ct);
+                    print!("{}", res);
+                }
+                println!();
+            }
+        };
+
+        do_work(ConvType::Auto("romaji"));
+        do_work(ConvType::Hira("hiragana"));
+        do_work(ConvType::Kata("katakana"));
     }
 
     fn handle_add(_d: &KanaTable, _m: &ArgMatches) {
@@ -59,7 +70,7 @@ fn main() {
         "add" => handle_add(&map, matches),
         "convert" => handle_convert(&map, matches),
         "search" => handle_search(&map, matches),
-        _ => unreachable!(),
+        _ => unreachable!(), // Clap doesnt let this happen (it seems)
     }
 }
 
@@ -131,52 +142,67 @@ fn clap() -> ArgMatches<'static> {
         .short("K")
         .takes_value(true)
         .multiple(true); // If there are spaces between chars
-    // they're counted as multiple values
-    // and the program crashes
+                         // they're counted as multiple values
+                         // and the program crashes
 
     App::new("Japanese Command-line Dictionary")
         .author(crate_authors!())
         .version(crate_version!())
         .about("Dictionary to keep track of learned/seen words and Romaji to Kana converter")
         .help_short("H")
-        .subcommand(SubCommand::with_name("add")
-                    .about("Add an entry to the dictionary.")
-                    .args(&[romaji.clone()
-                          .help("Convert a word and add to the dictionary.")
-                          .required_unless_one(&["hiragana", "katakana"]),
-                          hiragana.clone()
-                          .help("Convert a word to hiragana and add it to the dictionary.")
-                          .required_unless_one(&["romaji", "katakana"]),
-                          katakana.clone()
-                          .help("Convert a word to katakana and add it to the dictionary.")
-                          .required_unless_one(&["hiragana", "romaji"]),
-                          kanji.clone()
-                          .help("Add kanji to the kanji field."),
-                          meaning.clone()
-                          .help("Add text to the meaning field.")
-                          .required(true)]))
-        .subcommand(SubCommand::with_name("search")
-                    .about("Search the dictionary.")
-                    .args(&[romaji.clone()
-                          .help("Convert a word to kana and search in the dictionary.")
-                          .required_unless_one(&["hiragana", "katakana"]),
-                          hiragana.clone()
-                          .help("Convert a word to hiragana and search in the dictionary.")
-                          .required_unless_one(&["katakana", "romaji"]),
-                          katakana.clone()
-                          .help("Convert a word to katakana and search in the dictionary.")
-                          .required_unless_one(&["hiragana", "romaji"]),
-                          kanji.clone()
-                          .help("Searches for kanji in the kanji field."),
-                          meaning.clone()
-                          .help("Searches for word(s) in the meaning field.")]))
-        .subcommand(SubCommand::with_name("convert")
-                    .about("Convert text to kana.")
-                    .args(&[romaji.clone()
-                          .help("Convert text to kana."),
-                          hiragana.clone()
-                          .help("Convert text to hiragana."),
-                          katakana.clone()
-                          .help("Convert text to katakana.")]))
+        .subcommand(
+            SubCommand::with_name("add")
+                .about("Add an entry to the dictionary.")
+                .args(&[
+                    romaji
+                        .clone()
+                        .help("Convert a word and add to the dictionary.")
+                        .required_unless_one(&["hiragana", "katakana"]),
+                    hiragana
+                        .clone()
+                        .help("Convert a word to hiragana and add it to the dictionary.")
+                        .required_unless_one(&["romaji", "katakana"]),
+                    katakana
+                        .clone()
+                        .help("Convert a word to katakana and add it to the dictionary.")
+                        .required_unless_one(&["hiragana", "romaji"]),
+                    kanji.clone().help("Add kanji to the kanji field."),
+                    meaning
+                        .clone()
+                        .help("Add text to the meaning field.")
+                        .required(true),
+                ]),
+        )
+        .subcommand(
+            SubCommand::with_name("search")
+                .about("Search the dictionary.")
+                .args(&[
+                    romaji
+                        .clone()
+                        .help("Convert a word to kana and search in the dictionary.")
+                        .required_unless_one(&["hiragana", "katakana"]),
+                    hiragana
+                        .clone()
+                        .help("Convert a word to hiragana and search in the dictionary.")
+                        .required_unless_one(&["katakana", "romaji"]),
+                    katakana
+                        .clone()
+                        .help("Convert a word to katakana and search in the dictionary.")
+                        .required_unless_one(&["hiragana", "romaji"]),
+                    kanji.clone().help("Searches for kanji in the kanji field."),
+                    meaning
+                        .clone()
+                        .help("Searches for word(s) in the meaning field."),
+                ]),
+        )
+        .subcommand(
+            SubCommand::with_name("convert")
+                .about("Convert text to kana.")
+                .args(&[
+                    romaji.clone().help("Convert text to kana."),
+                    hiragana.clone().help("Convert text to hiragana."),
+                    katakana.clone().help("Convert text to katakana."),
+                ]),
+        )
         .get_matches()
 }

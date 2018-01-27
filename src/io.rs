@@ -30,12 +30,10 @@ fn path() -> Option<PathBuf> {
 
 pub fn get_file() -> Option<File> {
     match path() {
-        Some(p) => {
-            match File::open(&p) {
-                Err(_) => File::create(&p).ok(),
-                f => f.ok(),
-            }
-        }
+        Some(p) => match File::open(&p) {
+            Err(_) => File::create(&p).ok(),
+            f => f.ok(),
+        },
         None => None,
     }
 }
