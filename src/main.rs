@@ -1,9 +1,11 @@
+use std::io::{stdin, BufRead};
+
 use std::io::BufWriter;
 use std::io::prelude::*;
 
 #[macro_use]
 extern crate clap;
-use clap::{App, Arg, ArgMatches, SubCommand, Values};
+use clap::{App, Arg, ArgMatches, SubCommand};
 
 extern crate r2k;
 use r2k::conv_type::ConvType;
@@ -12,28 +14,46 @@ use r2k::kana_table::KanaTable;
 mod io;
 
 fn main() {
-    fn handle_convert(k: &KanaTable, m: &ArgMatches) {
-        fn aux(vals: Values) -> Vec<String> {
-            vals.into_iter().map(|x| x.to_string()).collect()
-        }
-
-        let do_work = |ct: ConvType<&str>| {
-            let tmp: Option<Values> = m.values_of(ct.unwrap());
-            let tmp: Option<Vec<String>> = tmp.map(|x| aux(x));
-
-            if let Some(v) = tmp {
-                for s in v {
-                    let ct = ct.map(|_| &s);
-                    let res = k.convert(ct);
-                    print!("{}", res);
-                }
-                println!();
+    fn handle_r2k(k: &KanaTable, m: &ArgMatches) {
+        fn choose_conv_type(m: &ArgMatches) -> ConvType<()> {
+            match (m.is_present("hiragana"), m.is_present("katakana")) {
+                (true, _) => ConvType::Hira(()),
+                (_, true) => ConvType::Kata(()),
+                _ => ConvType::Auto(()),
             }
         };
 
-        do_work(ConvType::Auto("romaji"));
-        do_work(ConvType::Hira("hiragana"));
-        do_work(ConvType::Kata("katakana"));
+        let ct = choose_conv_type(m);
+
+        let convert2str = |txt| {
+            let ct = ct.map(|_| &txt);
+            let res = k.convert(ct);
+            format!("{}", res)
+        };
+
+        if m.is_present("TEXT") {
+            let v: Vec<String> = m
+                .values_of("TEXT")
+                .unwrap()
+                .into_iter()
+                .map(|x| x.to_string())
+                .collect();
+
+            for s in v {
+                print!("{}", convert2str(s));
+            }
+
+            println!();
+        } else {
+            let stdin = stdin();
+
+            for line in stdin.lock().lines() {
+                match line {
+                    Ok(line) => print!("{}\n", convert2str(line)),
+                    Err(e) => println!("{}", e),
+                }
+            }
+        }
     }
 
     fn handle_add(_d: &KanaTable, _m: &ArgMatches) {
@@ -68,7 +88,7 @@ fn main() {
 
     match cmd {
         "add" => handle_add(&map, matches),
-        "convert" => handle_convert(&map, matches),
+        "r2k" => handle_r2k(&map, matches),
         "search" => handle_search(&map, matches),
         _ => unreachable!(), // Clap doesnt let this happen (it seems)
     }
@@ -102,7 +122,7 @@ fn main() {
 ///             2. Show entries that match all of the options used;
 ///             3. Show entries that match at least one of the options used;
 ///
-/// - [X] `convert`: Convert everything to kana. (NOTE: maybe have this as an external tool/crate?)
+/// - [X] `r2k`: Convert everything to kana. (NOTE: maybe have this as an external tool/crate?)
 ///     - [X] `-r`: Autodetect and convert words according to case;
 ///     - [X] `-h`: Don't autodetect, convert everything to hiragana;
 ///     - [X] `-k`: Don't autodetect, convert everything to katakana;
@@ -196,12 +216,20 @@ fn clap() -> ArgMatches<'static> {
                 ]),
         )
         .subcommand(
-            SubCommand::with_name("convert")
+            SubCommand::with_name("r2k")
                 .about("Convert text to kana.")
                 .args(&[
-                    romaji.clone().help("Convert text to kana."),
-                    hiragana.clone().help("Convert text to hiragana."),
-                    katakana.clone().help("Convert text to katakana."),
+                    Arg::with_name("hiragana")
+                        .conflicts_with("katakana")
+                        .help("Convert romaji to hiragana.")
+                        .long("hiragana")
+                        .short("h"),
+                    Arg::with_name("katakana")
+                        .conflicts_with("hiragana")
+                        .help("Convert romaji to katakana.")
+                        .long("katakana")
+                        .short("k"),
+                    Arg::with_name("TEXT").multiple(true),
                 ]),
         )
         .get_matches()
