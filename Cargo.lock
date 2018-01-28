@@ -79,7 +79,7 @@ dependencies = [
 [[package]]
 name = "r2k"
 version = "0.1.0"
-source = "git+https://github.com/siiky/r2k#9f93d668d6bb09412821ce97ae7e1e39f157ffe1"
+source = "git+https://github.com/siiky/r2k#ecab37ca97a0f5278a19d2a393393f50551f515f"
 dependencies = [
  "clap 2.29.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-jp 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
